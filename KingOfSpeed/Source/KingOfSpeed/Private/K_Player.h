@@ -1,10 +1,9 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+  // Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
-#include "C:/Unreal/Editor/UE_5.1/Engine/Plugins/EnhancedInput/Source/EnhancedInput/Public/InputActionValue.h"
 
 #include "K_Player.generated.h"
 
@@ -40,28 +39,6 @@ public:
 		class UInputAction* m_TurnAction;
 
 public:
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Jump)
-		int m_JumpMaxCount;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Move)
-		float m_SpeedMultiplier;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Move)
-		float m_SpeedDecreaseTime;
-
-private:
-	bool m_IsMoveSpeedLerping;
-
-	float m_StartWalkSpeed;
-	float m_LerpStartMoveSpeed;
-	float m_MoveSpeedTimer;
-
-
-	FVector2D m_MoveDir;
-
-private:
-	bool DecreasePlayerSpeed();
-	
-private:
-	void Move(const FInputActionValue& Value);
-
-	void Turn(const FInputActionValue& Value);
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = PlayerComponent)
+	class UK_PlayerMovement* m_PlayerMovement;
 };
