@@ -30,6 +30,8 @@ void UK_PlayerEquipmentController::Execute(const FInputActionValue& Value)
 
 		m_Owner->m_Cable->SetVisibility(true);
 		
+		m_Owner->JumpCurrentCount--;
+		
 		//	DrawDebugLine(GetWorld(), startPos, hitResult.ImpactPoint, FColor::Green, true, 100.0f, 0, 12.3f);
 	}
 	//m_CurrentEquipment->Execute();
