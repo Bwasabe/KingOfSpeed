@@ -45,6 +45,7 @@ private:
 
 	float m_MoveDurationTimer = 1.0f;
 
+public:
 	FVector2D m_MoveDir;
 
 public:

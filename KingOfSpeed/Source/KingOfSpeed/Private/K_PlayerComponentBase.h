@@ -7,7 +7,7 @@
 #include "K_PlayerComponentBase.generated.h"
 
 
-UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+UCLASS(Abstract)
 class UK_PlayerComponentBase : public UActorComponent
 {
 	GENERATED_BODY()

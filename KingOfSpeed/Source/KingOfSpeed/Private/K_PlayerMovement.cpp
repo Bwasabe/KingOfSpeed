@@ -38,7 +38,7 @@ void UK_PlayerMovement::TickComponent(float DeltaTime, ELevelTick TickType, FAct
 	}
 }
 
-bool UK_PlayerMovement::DecreasePlayerSpeed(float DeltaTime)
+bool UK_PlayerMovement::DecreasePlayerSpeed(const float DeltaTime)
 {
 	if (m_MoveDir == FVector2D::ZeroVector && !m_Owner->GetCharacterMovement()->IsFalling())
 	{
@@ -70,21 +70,23 @@ bool UK_PlayerMovement::DecreasePlayerSpeed(float DeltaTime)
 
 void UK_PlayerMovement::Move(const FInputActionValue& Value)
 {
-	// Value¸¦ floatÀ¸·Î ¹Ù²Û´Ù
+	// Valueï¿½ï¿½ floatï¿½ï¿½ï¿½ï¿½ ï¿½Ù²Û´ï¿½
 	m_MoveDir = Value.Get<FVector2D>();
 
 	if (m_Owner->Controller != nullptr)
 	{
-		// ÇÃ·¹ÀÌ¾îÀÇ È¸Àü°ªÀ» °¡Á®¿Í¼­
+		// ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ï¿½ï¿½ È¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Í¼ï¿½
 		const FRotator rotation = m_Owner->Controller->GetControlRotation();
-		// È¸Àü°ª Áß YawÈ¸Àü°ªÀ» °¡Á®¿Â ÈÄ
+		// È¸ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ YawÈ¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½
 		const FRotator yawRotation(0, rotation.Yaw, 0);
 
-		// ±× YawRotationÀÇ È¸Àü Çà·ÄÀ» ¸¸µé¾î X¹æÇâ(Àü¹æ)ÀÇ ¹æÇâÀ» °¡Á®¿Â´Ù
+		// ï¿½ï¿½ YawRotationï¿½ï¿½ È¸ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ Xï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½ï¿½ï¿½)ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Â´ï¿½
 		const FVector forwardDir = FRotationMatrix(yawRotation).GetUnitAxis(EAxis::X);
 		const FVector rightDir = FRotationMatrix(yawRotation).GetUnitAxis(EAxis::Y);
 
-		//m_MoveDir.Normalize();
+		m_MoveDir.Normalize();
+		//UE_LOG(LogTemp, Log, L"%s", *m_MoveDir.ToString());
+
 
 		m_Owner->AddMovementInput(forwardDir, m_MoveDir.Y);
 		m_Owner->AddMovementInput(rightDir, m_MoveDir.X);

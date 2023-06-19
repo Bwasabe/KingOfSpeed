@@ -9,10 +9,11 @@
 /**
  * 
  */
-UCLASS()
+UCLASS(abstract)
 class UK_PlayerEquipmentBase : public UK_PlayerComponentBase
 {
 	GENERATED_BODY()
-	
-	
+
+public:
+	virtual void Execute() PURE_VIRTUAL(UK_PlayerEquipmentBase::Execute, );
 };

@@ -37,8 +37,21 @@ public:
 		class UInputAction* m_JumpAction;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 		class UInputAction* m_TurnAction;
-
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+		class UInputAction* m_ExecuteAction;
 public:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
+		class UCameraComponent* m_PlayerCamera;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = CharacterMesh)
+		class USkeletalMeshComponent* m_PlayerMesh;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Cable)
+		class UCableComponent* m_Cable;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = PlayerComponent)
-	class UK_PlayerMovement* m_PlayerMovement;
+		class UK_PlayerMovement* m_PlayerMovement;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = PlayerComponent)
+		class UK_PlayerEquipmentController* m_PlayerEquipmentController;
 };
