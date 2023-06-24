@@ -35,6 +35,8 @@ public:
 		float m_SpeedDecreaseTime;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Move)
 		float m_LogValue = 4;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Move)
+		float m_MaxSpeed = 5000;
 
 private:
 	bool m_IsMoveSpeedLerping;
@@ -50,6 +52,7 @@ public:
 
 public:
 	void Move(const FInputActionValue& Value);
+	void Jump(const FInputActionValue& Value);
 
 	void Turn(const FInputActionValue& Value);
 

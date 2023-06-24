@@ -16,4 +16,5 @@ class UK_PlayerEquipmentBase : public UK_PlayerComponentBase
 
 public:
 	virtual void Execute() PURE_VIRTUAL(UK_PlayerEquipmentBase::Execute, );
+	virtual  void Release() PURE_VIRTUAL(UK_PlayerEquipmentBase::Release, );
 };

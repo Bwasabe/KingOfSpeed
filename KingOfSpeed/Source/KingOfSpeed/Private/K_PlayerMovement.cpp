@@ -8,8 +8,7 @@
 #include "K_Player.h"
 
 
-UK_PlayerMovement::UK_PlayerMovement() : UK_PlayerComponentBase()
-{}
+UK_PlayerMovement::UK_PlayerMovement() : UK_PlayerComponentBase() {}
 
 void UK_PlayerMovement::BeginPlay()
 {
@@ -32,9 +31,14 @@ void UK_PlayerMovement::TickComponent(float DeltaTime, ELevelTick TickType, FAct
 	}
 	else
 	{
-		m_MoveDurationTimer += DeltaTime;
+		if(!m_Owner->GetCharacterMovement()->IsFalling())
+		{
+			m_MoveDurationTimer += DeltaTime;
 
-		m_Owner->GetCharacterMovement()->MaxWalkSpeed += FMath::LogX(m_LogValue, m_MoveDurationTimer) * m_SpeedMultiplier * DeltaTime;
+			m_Owner->GetCharacterMovement()->MaxWalkSpeed += FMath::LogX(m_LogValue, m_MoveDurationTimer) * m_SpeedMultiplier * DeltaTime;
+		}
+
+		m_Owner->GetCharacterMovement()->MaxWalkSpeed = FMath::Clamp(m_Owner->GetCharacterMovement()->MaxWalkSpeed, m_StartWalkSpeed, m_MaxSpeed);
 	}
 }
 
@@ -85,14 +89,32 @@ void UK_PlayerMovement::Move(const FInputActionValue& Value)
 		const FVector rightDir = FRotationMatrix(yawRotation).GetUnitAxis(EAxis::Y);
 
 		m_MoveDir.Normalize();
-		//UE_LOG(LogTemp, Log, L"%s", *m_MoveDir.ToString());
-
 
 		m_Owner->AddMovementInput(forwardDir, m_MoveDir.Y);
 		m_Owner->AddMovementInput(rightDir, m_MoveDir.X);
 
 	}
 }
+
+void UK_PlayerMovement::Jump(const FInputActionValue& Value)
+{
+	const bool isFirstJump =m_Owner->JumpCurrentCount == 0;
+
+	if(isFirstJump)
+	{
+		if(m_Owner->GetCharacterMovement()->IsFalling())
+		{
+			m_Owner->JumpMaxCount = m_JumpMaxCount + 1;
+		}
+		else
+		{
+			m_Owner->JumpMaxCount = m_JumpMaxCount;
+		}
+	}
+		
+	m_Owner->Jump();
+}
+
 
 void UK_PlayerMovement::Turn(const FInputActionValue& Value)
 {

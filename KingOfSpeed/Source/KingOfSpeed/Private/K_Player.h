@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 
+
 #include "K_Player.generated.h"
 
 UCLASS()
@@ -26,6 +27,9 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+private:
+	bool m_IsFirstJump;
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
@@ -54,4 +58,19 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = PlayerComponent)
 		class UK_PlayerEquipmentController* m_PlayerEquipmentController;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = PlayerComponent)
+		class UK_PlayerHook* m_PlayerHook;
+		
+	// UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = PlayerComponent)
+	// 	class UK_PlayerShoot* m_PlayerShoot;
+public:
+	UPROPERTY(VisibleAnywhere, Category = PlayerMesh)
+		class USkeletalMeshComponent* m_PlayerGun;
+
+public:
+	UPROPERTY(EditDefaultsOnly,  Category = PlayerWidget)
+		class TSubclassOf<class UUserWidget> m_AimFactoryUI;
+
+	class UUserWidget* m_AimUI;
 };

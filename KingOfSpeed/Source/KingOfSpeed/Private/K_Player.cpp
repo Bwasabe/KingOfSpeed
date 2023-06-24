@@ -7,8 +7,12 @@
 #include <Camera/CameraComponent.h>
 #include "K_PlayerEquipmentController.h"
 #include "CableComponent.h"
+#include "K_PlayerHook.h"
+
+#include <Blueprint/UserWidget.h>
 
 #include "K_PlayerMovement.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 
 // Sets default values
@@ -39,20 +43,45 @@ AK_Player::AK_Player()
 	// 장비 컨트롤러
 	m_PlayerEquipmentController = CreateDefaultSubobject<UK_PlayerEquipmentController>(L"EquipmentController");
 
-	// 케이블
-	m_Cable = CreateDefaultSubobject<UCableComponent>(L"Cable");
+	// 훅
+	m_PlayerHook = CreateDefaultSubobject<UK_PlayerHook>(L"PlayerHook");
 
-	if(m_Cable)
-	{
-		m_Cable->SetupAttachment(m_PlayerCamera);
+	// 총 메시 로드
+	m_PlayerGun = CreateDefaultSubobject<USkeletalMeshComponent>(L"PlayerGun");
+	if(m_PlayerGun)
+	{	
+		m_PlayerGun->SetupAttachment(m_PlayerMesh, TEXT("hand_r"));
+
+		// 스켈레탈 메시 데이터 로드
+		ConstructorHelpers::FObjectFinder<USkeletalMesh> TempGunMesh(TEXT("/Script/Engine.SkeletalMesh'/Game/FPWeapon/Mesh/SK_FPGun.SK_FPGun'"));
+
+		if (TempGunMesh.Succeeded())
+		{
+			m_PlayerGun->SetSkeletalMesh(TempGunMesh.Object);
+			m_PlayerGun->SetRelativeLocation(FVector(-17,  10, -3));
+			m_PlayerGun->SetRelativeRotation(FRotator(0, 90, 0));
+		}
+
+		// 케이블
+		m_Cable = CreateDefaultSubobject<UCableComponent>(L"Cable");
+		if(m_Cable)
+		{
+			m_Cable->SetupAttachment(m_PlayerGun, L"Muzzle");
+		}
 	}
-
+	
+	
 }
 
 // Called when the game starts or when spawned
 void AK_Player::BeginPlay()
 {
 	Super::BeginPlay();
+
+	m_AimUI = CreateWidget(GetWorld(), m_AimFactoryUI);
+	
+	if(m_AimUI)
+		m_AimUI->AddToViewport();
 }
 
 // Called every frame
@@ -60,7 +89,6 @@ void AK_Player::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 }
-
 
 
 
@@ -89,7 +117,7 @@ void AK_Player::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	EnhancedInputComp->BindAction(m_MoveAction, ETriggerEvent::Triggered, m_PlayerMovement, &UK_PlayerMovement::Move);
 
 	// Jump
-	EnhancedInputComp->BindAction(m_JumpAction, ETriggerEvent::Triggered, this, &ACharacter::Jump);
+	EnhancedInputComp->BindAction(m_JumpAction, ETriggerEvent::Triggered, m_PlayerMovement, &UK_PlayerMovement::Jump);
 	EnhancedInputComp->BindAction(m_JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
 
 	//Turn
