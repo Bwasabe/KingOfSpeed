@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "InputActionValue.h"
 #include "GameFramework/Character.h"
 
 
@@ -25,15 +26,27 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	void ReStart(const FInputActionValue& InputActionValue);
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
-private:
-	bool m_IsFirstJump;
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 		class UInputMappingContext* m_kMappingContext;
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	class UInputAction* m_RestartAction;
+		
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Restart)
+		float m_RestartDuration = 0.5f;
+	
+	bool m_IsReadyToRestart = false;
+
+	float m_RestartTimer;
+private:
+	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"), Category = Restart)
+	FName m_LoadLevelName;
 	
 public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
@@ -45,7 +58,7 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Cable)
 		class UCableComponent* m_Cable;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = PlayerComponent)
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = PlayerComponent)
 		class UK_PlayerMovement* m_PlayerMovement;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = PlayerComponent)
@@ -53,16 +66,14 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = PlayerComponent)
 		class UK_PlayerHook* m_PlayerHook;
-		
-	// UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = PlayerComponent)
-	// 	class UK_PlayerShoot* m_PlayerShoot;
 public:
 	UPROPERTY(VisibleAnywhere, Category = PlayerMesh)
 		class USkeletalMeshComponent* m_PlayerGun;
 
 public:
-	UPROPERTY(EditDefaultsOnly,  Category = PlayerWidget)
-		class TSubclassOf<class UUserWidget> m_AimFactoryUI;
+	class UUserWidget* m_RestartUI;
+	
+	UPROPERTY(EditDefaultsOnly, Category = ReStart)
+		class TSubclassOf<class UUserWidget> m_RestartFactoryUI;
 
-	class UUserWidget* m_AimUI;
 };

@@ -15,6 +15,7 @@
 #include "K_PlayerComponentBase.h"
 
 #include "K_PlayerMovement.h"
+#include "Kismet/GameplayStatics.h"
 
 
 // Sets default values
@@ -79,18 +80,45 @@ void AK_Player::BeginPlay()
 {
 	Super::BeginPlay();
 
-	m_AimUI = CreateWidget(GetWorld(), m_AimFactoryUI);
+	m_RestartUI = CreateWidget(GetWorld(), m_RestartFactoryUI);
 	
-	if(m_AimUI)
-		m_AimUI->AddToViewport();
+	if(m_RestartUI)
+		m_RestartUI->AddToViewport();
+	
+	m_RestartUI->SetVisibility(ESlateVisibility::Hidden);
 }
 
 // Called every frame
 void AK_Player::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	if(m_IsReadyToRestart)
+	{
+		m_RestartTimer += DeltaTime;
+
+		if(m_RestartTimer >= m_RestartDuration)
+		{
+			m_RestartTimer = 0.0f;
+			m_IsReadyToRestart = false;
+			
+			m_RestartUI->SetVisibility(ESlateVisibility::Hidden);
+		}
+	}
 }
 
+void AK_Player::ReStart(const FInputActionValue& InputActionValue)
+{
+	if(m_IsReadyToRestart)
+	{
+		UGameplayStatics::OpenLevel(this, m_LoadLevelName, true);
+	}
+	else
+	{
+		m_IsReadyToRestart = true;
+		m_RestartUI->SetVisibility(ESlateVisibility::Visible);
+	}
+}
 
 
 // Called to bind functionality to input
@@ -122,6 +150,8 @@ void AK_Player::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	{
 		component->BindAction(EnhancedInputComp);
 	}
+
+	EnhancedInputComp->BindAction(m_RestartAction, ETriggerEvent::Triggered, this, &AK_Player::ReStart);
 
 }
 

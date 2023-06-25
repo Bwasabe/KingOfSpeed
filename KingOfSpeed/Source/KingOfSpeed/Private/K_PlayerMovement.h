@@ -47,7 +47,8 @@ public:
 		float m_LogValue = 4;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Move)
 		float m_MaxSpeed = 5000;
-
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Move)
+		float m_CurrentSpeed = 1000;
 private:
 	bool m_IsMoveSpeedLerping;
 
