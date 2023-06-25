@@ -25,7 +25,17 @@ protected:
 	
 public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-
+	virtual void BindAction(UEnhancedInputComponent* EnhancedInputComp) override;
+	
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	class UInputAction* m_MoveAction;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	class UInputAction* m_JumpAction;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	class UInputAction* m_TurnAction;
 public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Jump)
 		int m_JumpMaxCount;

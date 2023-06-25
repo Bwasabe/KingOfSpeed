@@ -14,6 +14,11 @@ void UK_PlayerHook::BeginPlay()
 	Super::BeginPlay();
 
 	m_PlayerMovement = m_Owner->m_PlayerMovement;
+
+	m_PlayerController = GetWorld()->GetFirstPlayerController();
+
+	if(!m_PlayerController)
+		UE_LOG(LogTemp, Log, L"Controller가 없음");
 }
 
 void UK_PlayerHook::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
@@ -45,6 +50,8 @@ void UK_PlayerHook::Execute()
 
 	if (GetWorld()->LineTraceSingleByChannel(hitResult, startPos, endPos, ECollisionChannel::ECC_Visibility, queryParam, collisionResponseParam))
 	{
+		m_PlayerController->PlayerCameraManager->StartCameraShake(m_CameraShake);
+		
 		m_IsGrappling = true;
 
 		int jumpCurrentCount = m_Owner->JumpCurrentCount;

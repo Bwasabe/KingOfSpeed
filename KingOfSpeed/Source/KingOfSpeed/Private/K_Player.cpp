@@ -3,7 +3,8 @@
 
 #include "K_Player.h"
 #include "C:/Unreal/Editor/UE_5.1/Engine/Plugins/EnhancedInput/Source/EnhancedInput/Public/EnhancedInputSubsystems.h"
-#include "C:/Unreal/Editor/UE_5.1/Engine/Plugins/EnhancedInput/Source/EnhancedInput/Public/EnhancedInputComponent.h"
+#include "EnhancedInputComponent.h"
+
 #include <Camera/CameraComponent.h>
 #include "K_PlayerEquipmentController.h"
 #include "CableComponent.h"
@@ -11,8 +12,9 @@
 
 #include <Blueprint/UserWidget.h>
 
+#include "K_PlayerComponentBase.h"
+
 #include "K_PlayerMovement.h"
-#include "GameFramework/CharacterMovementComponent.h"
 
 
 // Sets default values
@@ -22,7 +24,6 @@ AK_Player::AK_Player()
 	PrimaryActorTick.bCanEverTick = false;
 
 	
-
 	// 카메라
 	m_PlayerCamera = CreateDefaultSubobject<UCameraComponent>(L"PlayerCamera");
 	if (m_PlayerCamera)
@@ -112,19 +113,15 @@ void AK_Player::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	UEnhancedInputComponent* EnhancedInputComp = CastChecked<UEnhancedInputComponent>(PlayerInputComponent);
 
 	if (!EnhancedInputComp)return;
-	
-	//Move
-	EnhancedInputComp->BindAction(m_MoveAction, ETriggerEvent::Triggered, m_PlayerMovement, &UK_PlayerMovement::Move);
 
-	// Jump
-	EnhancedInputComp->BindAction(m_JumpAction, ETriggerEvent::Triggered, m_PlayerMovement, &UK_PlayerMovement::Jump);
-	EnhancedInputComp->BindAction(m_JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
 
-	//Turn
-	EnhancedInputComp->BindAction(m_TurnAction, ETriggerEvent::Triggered, m_PlayerMovement, &UK_PlayerMovement::Turn);
+	TInlineComponentArray<UK_PlayerComponentBase*> components;
 
-	EnhancedInputComp->BindAction(m_ExecuteAction, ETriggerEvent::Started, m_PlayerEquipmentController, &UK_PlayerEquipmentController::Execute);
-	EnhancedInputComp->BindAction(m_ExecuteAction, ETriggerEvent::Completed, m_PlayerEquipmentController, &UK_PlayerEquipmentController::Release);
+	GetComponents(components);
+	for(auto* component : components)
+	{
+		component->BindAction(EnhancedInputComp);
+	}
 
 }
 

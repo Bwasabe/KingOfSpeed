@@ -28,9 +28,14 @@ public:
 		float m_Distance = 3000.0f;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Move)
 		float m_HookForce = 250000.0f;
+
+	UPROPERTY(EditDefaultsOnly, Category = CameraShake)
+		TSubclassOf<class UCameraShakeBase> m_CameraShake;
 	
 private:
 	class UK_PlayerMovement* m_PlayerMovement;
+
+	class APlayerController* m_PlayerController;
 
 private:
 	FVector m_GrabPoint;

@@ -4,6 +4,7 @@
 #include "K_PlayerMovement.h"
 #include "K_PlayerComponentBase.h"
 #include <GameFramework/CharacterMovementComponent.h>
+#include "C:/Unreal/Editor/UE_5.1/Engine/Plugins/EnhancedInput/Source/EnhancedInput/Public/EnhancedInputComponent.h"
 
 #include "K_Player.h"
 
@@ -40,6 +41,19 @@ void UK_PlayerMovement::TickComponent(float DeltaTime, ELevelTick TickType, FAct
 
 		m_Owner->GetCharacterMovement()->MaxWalkSpeed = FMath::Clamp(m_Owner->GetCharacterMovement()->MaxWalkSpeed, m_StartWalkSpeed, m_MaxSpeed);
 	}
+}
+
+void UK_PlayerMovement::BindAction(UEnhancedInputComponent* EnhancedInputComp)
+{
+	// Move
+	EnhancedInputComp->BindAction(m_MoveAction, ETriggerEvent::Triggered, this, &UK_PlayerMovement::Move);
+	
+	// Jump
+	EnhancedInputComp->BindAction(m_JumpAction, ETriggerEvent::Triggered, this, &UK_PlayerMovement::Jump);
+	EnhancedInputComp->BindAction(m_JumpAction, ETriggerEvent::Completed, m_Owner, &ACharacter::StopJumping);
+	
+	//Turn
+	EnhancedInputComp->BindAction(m_TurnAction, ETriggerEvent::Triggered, this, &UK_PlayerMovement::Turn);
 }
 
 bool UK_PlayerMovement::DecreasePlayerSpeed(const float DeltaTime)

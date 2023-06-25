@@ -24,6 +24,8 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
+	virtual void BindAction(UEnhancedInputComponent* EnhancedInputComp){}
+
 protected:
 	class AK_Player* m_Owner;
 };
