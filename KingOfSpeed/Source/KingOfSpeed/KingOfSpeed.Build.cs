@@ -2,7 +2,7 @@
 
 using UnrealBuildTool;
 
-public class KingOfSpeed : ModuleRules
+public class  KingOfSpeed : ModuleRules
 {
 	public KingOfSpeed(ReadOnlyTargetRules Target) : base(Target)
 	{
